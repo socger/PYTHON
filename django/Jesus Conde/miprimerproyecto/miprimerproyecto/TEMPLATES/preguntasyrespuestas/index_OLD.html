@@ -1,0 +1,11 @@
+<html>
+	<head>
+		<title>Preguntas</title>
+	</head>
+
+	<body>
+		{% for pregunta in preguntas %}
+			<a href="{% url "pregunta_detalle" pregunta.id %}">{{ pregunta.asunto }} ?</a><br/>
+		{% endfor %}
+	</body>
+</html>

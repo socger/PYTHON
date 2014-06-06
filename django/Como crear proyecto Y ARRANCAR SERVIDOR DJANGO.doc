@@ -1,0 +1,268 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang3082{\fonttbl{\f0\fswiss\fcharset0 Arial;}}
+{\colortbl ;\red255\green0\blue0;\red0\green255\blue0;\red0\green0\blue0;\red0\green128\blue128;\red255\green0\blue255;}
+{\*\generator Msftedit 5.41.15.1515;}\viewkind4\uc1\pard\cf1\f0\fs28 PRIMERO VAMOS AL DIRECTORIO DONDE QUEREMOS CREAR EL PROYECTO\cf0\par
+cd c:\\carpeta del proyecto\par
+\par
+\cf1 LUEGO EJECUTAMOS ESTA LINEA PARA CREAR EL PROYECTO LLAMADO miprimerproyecto\par
+\cf0 django-admin.py startproject miprimerproyecto\par
+\par
+\cf1 LUEGO ENTRAMOS EN EL DIRECTORIO \par
+\cf0 c:\\carpeta del proyecto\\miprimerproyecto\par
+\par
+\cf1 LUEGO EJECUTAMOS ESTA LINEA PARA ARRANCAR EL SERVIDOR web DE PYTHON\par
+PERO NO OLVIDEMOS QUE EL FICHERO manage.py ESTA DENTRO DEL DIRECTORIO DEL PROYECTO RECIEN CREADO\par
+\cf0 python manage.py runserver \par
+\par
+\cf1 TAMBIEN PODEMOS HACER POSIBLE QUE EL SERVIDOR SEA ACCESIBLE DESDE CUALQUIER ORDENADOR CON ESTE SERVIDOR WEB DE PYTHON\par
+\cf0 python manage.py runserver 0.0.0.0:8000   \cf1 CON ESTO LO QUE CONSEGUIMOS ES DECIRLE QUE HAGA VISIBLE TUS IP PUBLICAS(LAS DE ESTE ORDENADOR)\par
+\cf0\par
+\cf1 UNA VEZ CONFIGURADA LA BD CON LA QUE VAMOS A TRABAJAR (VER VIDEO 3 DE JESUS CONDE) PASAMOS ESTA LINEA\par
+\cf0 python manage.py syncdb \cf1 ... CON ESTA LINEA CREAMOS LAS TABLAS NECESARIAS PARA NUESTRO PROYECTO (AUTOMATICAMENTE)\par
+\cf0\par
+\cf1 DESPUES PREGUNTARA SI QUEREMOS CREAR UN SUPER USUARIO\par
+\cf0 e-mail: socger@hotmail.com\par
+usuario: jero\par
+pwd: 123456789\par
+\par
+\cf1 PARA CREAR APLICACIONES / MODULOS DENTRO DE NUESTRO PROYECTO\par
+\cf0 python manage.py startapp preguntasyrespuestas ... DONDE preguntasyrespuestas SERA LA APLICACION\par
+\par
+\cf1 SE CREARA UN DIRECTORIO preguntasyrespuestas DONDE TENDREMOS VARIOS FICHEROS\par
+EDITAREMOS \cf0 models.py \cf1 PARA CREAR DOS CLASES / TABLAS Y UNA DE ELLAS ESTARA LIGADA\par
+A LA OTRA POR UN \cf0 foreignKey\par
+\par
+\par
+\cf1 DESPUES IREMOS AL DIRECTORIO PRINCIPAL\cf2  \cf0 miprimerproyecto \cf1 Y EDITAREMOS EL FICHERO \cf0 settings.py\par
+\cf1 Y A\'d1ADIREMOS AL APARTADO\cf0  ... installed_apps \cf1 LA APLICACION RECIEN CREADA (MODULO \cf0 preguntasyrespuestas\cf1 )\cf0\par
+\par
+\cf1 AHORA VOLVEREMOS A EJECUTAR\cf0  syncdb \cf1 PARA CREAR LOS MODELOS NUEVOS (tablas)\par
+\cf0 python manage.py syncdb\par
+\par
+\cf1 CON EL SIGUIENTE COMANDO VEMOS LAS SETENCIAS SQL DE COMO CREA LAS TABLAS PARA \cf0 preguntasyrespuestas\par
+\cf1 PERO NO HACE FALTA EJECUTARLO, SIMPLEMENTE ES PARA VER COMO TRABAJA CON SQL Django\par
+\cf0 python manage.py sql preguntasyrespuestas   \cf1 POR SUPUESTO ESTO HAY QUE HACERLO EN EL DIRECTORIO PRINCIPAL, DONDE ESTA \cf0 manage.py\par
+\par
+\cf1 PODEMOS ACCEDER A UNA LISTA DE LOS COMANDOS DISPONIBLES DE Django POR MEDIO DE LA CONSOLA PONIENDO LA SIG.LINEA\par
+\cf0 python manage.py help\par
+\par
+\cf1 SI QUEREMOS ACCEDER A MAS INFORMACION DE CIERTO COMANDO ESCRIBIRIAMOS ESTO\par
+\cf0 python manage.py sql --help     \cf1 ES DECIR EL NOMBRE DEL COMANDO SEGUIDO DE DOS GUIONES Y LA PALABRA help\par
+\cf0\par
+\cf1 AHORA VAMOS A VER COMO LLAMAR A LA CONSOLA DE PYTHON PERO DESDE EL PROYECTO Django\par
+\cf0 python manage.py shell\par
+\par
+\cf1 CON EL CODIGO SIGUIENTE IMPORTAMOS LOS MODELOS\par
+\cf0 from preguntasyrespuestas.models import Pregunta,Respuesta\par
+\par
+\cf1 CON LA LINEA SIGUIENTE LE PEDIMOS QUE NOS DEVUELVA TODOS LOS OBJETOS DE LA CLASE Pregunta (todos los registros)\par
+\cf0 Pregunta.objects.all()      \cf1 NOS DEVUELVE TODO EN UNA LISTA\par
+\cf0\par
+CON LA LINEA SIGUIENTE IMPORTAMOS LOS VALORES NECESARIOS PARA TRABAJAR CON HORARIOS DE LA ZONA\par
+from django.utils import timezone\par
+\par
+\cf1 AHORA VAMOS A VER COMO SABER SI HAY RESPUESTAS\par
+\cf0 p.respuesta_set.all()\par
+\par
+COMO CREARLE RESPUESTAS ... CON EL METODO .create\par
+p.respuesta_set.create(contenido='Mi preferido es Borges')\par
+\par
+CON LA LINEA SIGUIENTE CREAMOS UNA INSTANCIA / OBJETO (p) DE LA CLASE Pregunta Y LE RELLENAMOS VALORES\par
+p = Pregunta(asunto="Quien es tu escritor favorito", descripcion="", fecha_publicacion=timezone.now())\par
+\par
+AHORA VAMOS A VER COMO GRABARLO EN LA TABLA DE LA BASE DE DATOS\par
+p.save()\par
+\par
+DE TAL MANERA QUE PODEMOS ACCEDER A CADA UNO DE LOS CAMPOS DEL REGISTRO\par
+p.id\par
+p.asunto\par
+\par
+CON p.fecha_publicacion PODEMOS VER EL CAMPO FECHA, PERO NOS APARECE EN FORMATO UTC. SI QUEREMOS CAMBIARLO, PODEMOS, EN settings.py\par
+\par
+PERO TENEMOS QUE RETOCAR OTRA VEZ models.py PARA QUE NOS PRESENTE BIEN LOS CAMPOS STRING\par
+ESTO SE CONSIGUE PONIENDO A CADA CLASE / MODELO SU METODO __str__\par
+POR EJEMPLO PARA LA CLASE Pregunta SERIA\par
+    def __str__(self):\par
+    \tab return self.asunto\par
+\par
+PARA TRAER EN CONCRETO UN REGISTRO / OBJECTO\par
+p = Pregunta.objects.get(pk=1)   ASI TRAEMOS EL OBJETO CON id = 1\par
+\par
+SI VEMOS EL METODO publicado_hoy() DE LA CLASE Pregunta NOS DICE SI EL OBJETO ACTUAL ESTA PUBLICADO HOY O NO\par
+p.publicado_hoy()  PERO ANTES TENGO QUE HABER IMPORTADO EL MODULO preguntasyrespuestas CON SUS DOS CLASES y HABER IMPORTADO TIMEZONE\par
+\par
+VAMOS A VER SI TIENE RESPUESTAS\par
+p.respuesta_set.all()\par
+\par
+\par
+VAMOS A CREARLE RESPUESTAS\par
+p.respuesta_set.create(contenido="Mi preferido es Antonio Machado")\par
+\par
+ES BUENO ENTENDER QUE p ES LA INSTANCIA DE LA CLASE Pregunta Y respuesta ES EL NOMBRE DE LA TABLA Y _set ES EL METODO QUE NOS PERMITE ACCEDER A LA OTRA TABLA Y \par
+CON create ACCEDEMOS DIRECTAMENTE A LA TABLA PARA CREAR EL REGISTRO\par
+\par
+ASI QUE UNA VEZ CREADOS REGISTROS EN respuesta PODEMOS HACER FILTROS\par
+Respusta.objects.filter(contenido='Mi preferido es Borges")\par
+\par
+TAMBIEN SE PUEDE HACER BUSQUEDA POR CONTENIDO EN CIERTO CAMPO POR EJEMPLO EN conteindo QUE EXISTA LA PALABRA Machado,\par
+SE HARIA CON EL METODO __contains DEL CAMPO contenido\par
+Respuesta.objects.filter(contenido__contains="Machado")\par
+\par
+O TAMBIEN PODRIAMOS PREGUNTARLE A LA OTRA TABLA Respuesta DONDE EL CAMPO asunto DE LA TABLA Pregunta CONTUVIERA LA PALABRA escritor\par
+Respuesta.objects.filter(Pregunta__asunto__contains="escritor")\par
+\par
+COMO GUARDAR EN UNA VARIABLE EL CONTENIDO DE Respuesta DONDE EL CAMPO contenido DE Respuesta CONTENGA LA PALABRA Machado\par
+conjuntoresultados=Respuesta.objects.filter(contenido__contains="Machado")\par
+\par
+\cf1 COMO SABER LA CANTIDAD DE REGISTROS DEVUELTOS\cf0\tab\par
+conjuntoresultados.count()\par
+\par
+\cf1 PARA BORRAR EL CONJUNTO DE REGISTROS FILTRADOS\cf0\par
+conjuntoresultados.delete()\par
+\ul\par
+\cf1\ulnone EL FICHERO PARA CREAR LAS VISTAS ES views.py Y ESTA DENTRO DEL DIRECTORIO preguntasyrespuestas\par
+EN EL CREAREMOS NUESTRA VISTA\par
+\par
+LUEGO HAY QUE IR AL FICHERO settings.py Y DECIRLE LA URL A LA QUE PYTHON DEBE DE ENLAZAR PARA MOSTRAR LA VIEW\par
+Django BUSCA LA VARIABLE ROOT_URLCONF DENTRO DE settings.py, ESTA VARIABLE GUARDA EL FICHERO CON LAS DIRECCIONES URLS\par
+IRA A BUSCAR EL FICHERO urls.py QUE ESTA DENTRO DE LA CARPETA preguntasyrespuestas\cf0\ul\par
+\par
+\par
+\fs48 PLANTILLAS\fs28\par
+\cf1\ulnone PARA EMPEZAR A USAR PLANTILLAS HAY QUE DECIRLE A Django DONDE ESTAN LOS ARCHIVOS TEMPLATE. \par
+ASI QUE MODIFICAREMOS settings.py Y A\'d1ADIREMOS UNA VARIABLE NUEVA PARA LOCALIZAR LOS TEMPLATES\par
+\cf3 TEMPLATE_DIRS = (\par
+\tab "ruta absoluta",\par
+)\par
+\cf1\tab\par
+CUALQUIER TEXTO RODEADO POR DOS PARES DE LLAVES ES UNA VARIABLE \{\{ texto \}\}\par
+\cf3 <a href="\{% url "pregunta_detalle" pregunta.id %\}">\cf4\{\{ pregunta.asunto \}\}\cf3  ?</a><br/>\par
+\par
+\cf1 CUALQUIER CONTENIDO RODEADO POR LLAVES Y % ES UN Template Tag (COMANDO DE PLANTILLA)\cf3\par
+<a href="\cf4\{% url "pregunta_detalle" pregunta.id %\}\cf3 ">\{\{ pregunta.asunto \}\} ?</a><br/>\cf1\par
+\par
+\par
+AHORA DEBEMOS DE CAMBIAR EN urls.py Y A\'d1ADIRLE A LAS RUTAS EL PARAMETRO name\par
+ASI SI EN LAS PLANTILLAS USAMOS ESTE name SI LUEGO DESEAMOS CAMBIAR LA FORMA DE ACCEDER A EL\par
+(MODIFICANDO LA URL) NO TENDREMOS QUE TOCAR LAS PLANTILLAS\cf0\par
+urlpatterns = patterns('',\par
+    url(r'^preguntas/$', 'preguntasyrespuestas.views.index', \cf4 name='preguntas'\cf0 ),\par
+    url(r'^preguntas/(?P<pregunta_id>\\d+)/$', 'preguntasyrespuestas.views.pregunta_detalle', \cf4 name='pregunta_detalle'\cf0 ),\par
+)\par
+\par
+\cf5 TAGS TEMPLATES MAS USADOS\par
+HACER LOOP FOR\par
+\cf1\par
+SOBRE ITEMS DE UN ARRAY\par
+\cf0\{% for element in list %\}\par
+\tab <LI> \{\{element.name\}\}\par
+\{% endfor %\}\par
+\par
+\cf1 SE PUEDEN HACER LOOP FOR INVERSOS\par
+SOLO USANDO LA PALABRA REVERSED\cf0\par
+\{% for element in list \cf4 reversed\cf0  %\}\par
+\tab <LI> \{\{element.name\}\}\par
+\{% endfor %\}\par
+\par
+\cf1 PARA ACCEDER A LOS ITEMS DE UN DICCIONARIO\cf0\par
+\{% for \cf4 key\cf0 , \cf4 value \cf0 in \cf4 midic.items \cf0 %\}\par
+\tab\cf4\{\{ key \}\}: \{\{ value \}\}\par
+\cf0\{% endfor %\}\par
+\par
+\cf1 PODEMOS TAMBIEN ACCEDER A UNA LISTA DE LISTAS\par
+Imaginemos que tenemos una lista de coordenadas x y z\par
+podemos desencadenar los valores en cada sublista\par
+dentro de variables individuales\cf0\par
+\{% for \cf4 x,y,z \cf0 in \cf4 coordinates \cf0 %\}\par
+\tab\{%\cf4 x\cf0 %\}-\{%\cf4 y\cf0 %\}-\{%\cf4 z\cf0 %\},\par
+\{% endfor %\}\par
+\par
+\cf5 TAG IF\par
+\cf1 Aqui en este proceso se evalua si las variables son = True y si no hace el else\par
+\cf0\{% if match_finished %\}\par
+\tab the match is finished\par
+\{% elif match_started %\}\par
+\tab the match is started\par
+\{% else %\}\par
+\tab the match as not started\par
+\{% endif %\}\par
+\par
+\cf1 un tag if puede usar los operadores and, or y not\par
+y tambien los operadores in, >, <=, =, etc\par
+\par
+\cf5 EL TAG \{% include %\}\par
+\cf1 Incluye una plantilla dentro de otra y puede ser un string en c\'f3digo puro u otra variable\par
+\cf3\{% include "common/shared.html" %\} \cf1 Este primer c\'f3digo incluye el contenido de la plantilla llamada shared.html situada en la carpeta common\cf3\par
+\cf0\par
+\cf3\{% include template_name %\} \cf1 Incluir\'e1 el contenido el contenido de la plantilla cuyo nombre estar\'e1 dentro de la variable template_name\par
+\cf0\par
+\cf1 Por defecto la plantilla incluida tiene el mismo CONTEXT de la plantilla que la incluye y se le aplicar\'e1n sus variables, aunque podemos tambien pasar variables adicionales al CONTEXT de la plantilla que se incluye\cf0\par
+\cf3\{% include "common/shared.html" with language="python" title="My script" %\} \par
+\par
+\cf5 HERENCIAS DE PLANTILLAS ... inheritance\cf0\par
+\cf1 Podemos crear una plantilla base que nos servir\'e1 como plantilla principal para nuestro SITE con todos los elementos comunes a nuestro proyecto.\par
+Luego vamos dise\'f1ando plantillas hijo que ser\'e1n contenido que ir\'e1 cambiando en la plantilla base.\par
+Por eso sobre la carpeta raiz de las plantillas (TEMPLATE), NO las carpetas que creemos para cada uno de los modulos (preguntasyrespuestas), crearemos nuestras plantillas base.\par
+En este ejemplo crearemos, el fichero \cf3 base.html\par
+\par
+\cf1 Cada bloque con el siguiente contenido\cf3\par
+\{% block \cf4 content \cf3 %\}\par
+\{% endblock %\}\par
+\cf1 significar\'e1 que luego tendr\'edamos que poner dentro de este c\'f3digo un contenido con el nombre\cf3  content\par
+\par
+\cf1 Luego en las otras templates habr\'eda que a\'f1adirles (por ejemplo a \cf3 index.html \cf1 de la carpeta preguntasyrespuestas)\par
+\cf0 Primero la l\'ednea extends, sino nos dar\'eda un error\par
+\par
+\cf5 ADMINISTRACION\cf0\par
+\cf1 Django ya viene con su propio sistema de administraci\'f3n. Para usarlo hay que activarlo en settings.py\par
+As\'ed que dentro de la variable tienes que a\'f1adir las l\'edneas siguientes a lo que ya tuvieras\cf0\par
+INSTALLED_APPS = (\par
+    'django.contrib.admin',\par
+    'django.contrib.admindocs',\par
+)\par
+\par
+\cf1 Una vez hechos estos cambios, tenemos que sincronizar la base de datos\cf0\par
+python manage.py syncdb \cf1 ... CON ESTA LINEA CREAMOS LAS TABLAS NECESARIAS PARA NUESTRO PROYECTO \par
+Esto lo haremos dentro del shell\ul\par
+\par
+\ulnone Pero tambien tenemos que hacer otro cambio en \cf3 urls.py\par
+\cf1 Para empezar tenemos que incluir en los imports a \cf3 include, admin y admin.autodiscover\par
+\cf1 as\'ed que ahora quedar\'e1 as\'ed\cf3  \par
+from django.conf.urls import patterns, include, url\par
+\par
+from django.contrib import admin\par
+admin.autodiscover()\par
+\par
+urlpatterns = patterns('',\par
+    # Examples:\par
+    # url(r'^$', 'miprimerproyecto.views.home', name='home'),\par
+    # url(r'^blog/', include('blog.urls')),\par
+\par
+    url(r'^preguntas/$', 'preguntasyrespuestas.views.index', name='preguntas'),\par
+    url(r'^preguntas/(?P<pregunta_id>\\d+)/$', 'preguntasyrespuestas.views.pregunta_detalle', name='pregunta_detalle'),\par
+\par
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),\par
+    url(r'^admin/', include(admin.site.urls)),\par
+)\par
+\par
+\cf1 Una vez arranquemos el servidor de Django, pondremos en el navegador localhost:8000/admin\par
+Si es la primera vez que arrancamos login nos pedir\'e1 que nos logueemos, son los valores que creemos la primera vez que instalemos Django.\par
+Si hemos olvidado el superusuario y su contrase\'f1a, siempre podremos crear otro\par
+\cf3 python manage.py createsuperuser --username=admin --email=admin@example.com \cf1 Se nos pedira la password y que la volvamos a introducir\par
+\par
+Pero todav\'eda no aparecen en el administrador todos los m\'f2dulos creados, as\'ed que tenemos que decirle a Django esto.\par
+Volvemos a cada uno de los modulos creados (carpeta) y creamos (si no existe) un fichero llamado \cf3 admin.py\par
+\cf1 Ojo este fichero tiene que estar en la carpeta preguntasyrespuestas (modulo), no en la de TEMPLATES/preguntasyrespuestas\par
+\par
+Por supuesto es bueno despues reiniciar el servidor Django\par
+\par
+Pero si lo que queremos es poder editar las respuestas, cuando pulsamos para ver una de las preguntas, tendr\'edamos que modificar el \cf0 admin.py \cf1 de \cf0 preguntasyrespuestas\cf1 . Es evidente que esto podemos hacerlo porque el model\cf0  Respuesta \cf1 tiene un foreign key con\cf0  Pregunta.\par
+\par
+\cf1 As\'ed que entre los \cf0 import \cf1 y los \cf0 register \cf1 a\'f1adiremos estas l\'edneas\par
+\cf0 class PreguntaAdmi(admin.ModelAdmin):\par
+\par
+\cf1 No olvidemos que esta clase tenemos que pasarselo como segundo parametro al\cf0  register \cf1 oportuno \par
+\cf0\par
+\par
+VOY POR EL VIDEO 19 MINUTO 3:15\par
+}
+ 

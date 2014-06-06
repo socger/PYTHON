@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %} Crear una pregunta {% endblock %}
+
+{% block content %}
+	<form action = "" method = "post"> {% csrf_token %} 
+		<!-- con el tag csrf_token se protege de los ataques de form -->
+		<!-- y con el include de abajo pasamos los campos del form
+		en vez de usar {{ form.as_p }} -->
+		{% include "preguntasyrespuestas/form_snippets.html" %}
+		<input type="submit" value="Guardar" />
+	</form>	
+{% endblock %}

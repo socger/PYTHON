@@ -1,0 +1,29 @@
+<!DOCTYPE <html>
+	<html lang="es">
+	<head>
+		<title>
+			{% block title%}Inicio{% endblock %}.- Curso de Django by Socger
+		</title>
+	</head>
+
+	<body>
+		<div id="header">
+			{% if user.is_authenticated %}
+				<p> Bienvenido, <b>{{ user.username }} | <a href="{% url "logout" %}">Log out</a></b> </p>
+			{% else %}
+				<p>Bienvenido, Por favor <a href="{% url "login" %}">Log in</a></p>
+			{% endif %}
+
+			<h1>Curso de Django. Socger</h1>
+		</div>
+
+		<div id="content">
+			{% block content %}
+			{% endblock %}
+		</div>
+
+		<div id="navigation">
+				<p><a href="{% url "homepage" %}">Inicio</a> | <a href="{% url "preguntas" %}">Preguntas</a></p>
+		</div>
+	</body>
+</html>
